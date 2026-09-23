@@ -1,0 +1,63 @@
+device: "cuda"
+seed: 42
+use_amp: False
+
+# Generator
+img_size: 256
+patch_size: 4
+num_input_slices: 3
+num_classes: 1
+embed_dim: 96
+depths: [2, 2, 8, 2]
+num_heads: [3, 6, 12, 24]
+window_size: 8
+mlp_ratio: 4.0
+qkv_bias: True
+qk_scale: null
+drop_rate: 0.0
+drop_path_rate: 0.1
+ape: False
+patch_norm: True
+use_checkpoint: False
+bilinear: True
+use_shift_conv_internal: True
+use_shift_conv_external: True
+use_se_block: True
+se_reduction: 4
+se_residual: False
+
+# Discriminator
+ndf: 64
+crop_center: 128
+GP: True
+
+# Loss
+loss_weights: [1000, 1000, 5, 0.5, 10]
+
+# Training
+epochs_n: 100
+batch_size: 28
+lr: 0.00091
+GAN_training: 1
+load_cp: 0
+resume_training: 0
+minmax_noise_val: [-0.01, 0.01]
+
+# Dataset
+dataset: "IXI"
+slice_range: [35, 115]
+train_data_dir: "data/IXI/train"
+val_data_dir: "data/IXI/val"
+predict_data_dir: "data/IXI/test"
+train_num_workers: 4
+val_num_workers: 4
+
+# Mask
+mask_type: "cartesian"
+sampling_percentage: 20
+mask_path: "Masks/cartesian/cartesian_256_256_20.mat"
+
+# Output
+output_dir: "runs/exp_cartesian_20"
+tb_write_losses: 1
+tb_write_images: 1
