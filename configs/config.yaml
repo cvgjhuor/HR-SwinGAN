@@ -20,11 +20,14 @@ ape: False
 patch_norm: True
 use_checkpoint: False
 bilinear: True
+# Architectural Components (The Proposed HR-SwinGAN)
+use_rstb: True
+rstb_resi_connection: "1conv"
+use_symmetric_decoder: True
+use_full_decoder: True
 use_shift_conv_internal: True
 use_shift_conv_external: True
-use_se_block: True
-se_reduction: 4
-se_residual: False
+use_lrcab: True
 
 # Discriminator
 ndf: 64

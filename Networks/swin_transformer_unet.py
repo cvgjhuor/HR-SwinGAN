@@ -1163,7 +1163,9 @@ class SwinTransformerSys(nn.Module):
         # Optional SE settings for skip, bottleneck, and decoder features.
         # Prefer explicit kwargs and only fall back to config when needed.
         # This keeps hard-isolation behavior predictable across call sites.
-        self.use_se = kwargs.get('use_se_block', False)
+        # Optional LRCAB / Channel Attention settings for skip, bottleneck, and decoder features.
+        self.use_lrcab = kwargs.get('use_lrcab', kwargs.get('use_se_block', False))
+        self.use_se = self.use_lrcab
         self.se_reduction = kwargs.get('se_reduction', 4)
         self.se_residual = kwargs.get('se_residual', False)
         self.use_se_bottleneck = kwargs.get('use_se_bottleneck', False)
@@ -1205,8 +1207,9 @@ class SwinTransformerSys(nn.Module):
         if 'config' in kwargs:
             config = kwargs['config']
             # Respect explicit kwargs first to preserve hard-isolation behavior.
-            if 'use_se_block' not in kwargs:
-                self.use_se = getattr(config, 'use_se_block', False)
+            if 'use_lrcab' not in kwargs and 'use_se_block' not in kwargs:
+                self.use_lrcab = getattr(config, 'use_lrcab', getattr(config, 'use_se_block', False))
+                self.use_se = self.use_lrcab
             if 'se_reduction' not in kwargs:
                 self.se_reduction = getattr(config, 'se_reduction', 4)
             if 'se_residual' not in kwargs:
@@ -1312,7 +1315,7 @@ class SwinTransformerSys(nn.Module):
         else:
             se_mode = "residual" if self.se_residual else "scaling"
         if self.use_se:
-            print(f"SE Block Enabled in Skip Connections with reduction={self.se_reduction}, mode={se_mode}")
+            print(f"[Proposed] LRCAB (Lightweight Residual Channel Attention Block) Enabled in Skip Connections (reduction={self.se_reduction})")
         if self.use_se_bottleneck:
             print(f"SE Block Enabled in Bottleneck with reduction={self.se_reduction}, mode={se_mode}")
         if self.use_se_decoder:
