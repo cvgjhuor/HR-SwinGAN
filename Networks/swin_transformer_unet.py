@@ -1193,7 +1193,7 @@ class SwinTransformerSys(nn.Module):
         self.rstb_resi_connection = kwargs.get('rstb_resi_connection', '1conv')
         self.use_dynamic_heads = kwargs.get('use_dynamic_heads', False)
         self.use_symmetric_decoder = kwargs.get('use_symmetric_decoder', False)
-        self.use_full_decoder = kwargs.get('use_full_decoder', False)
+        self.use_full_decoder = kwargs.get('use_full_decoder', True)
         
         # Hard Isolation: RCAB Config
         self.use_estn_rcab = kwargs.get('use_estn_rcab', False)
@@ -1269,7 +1269,7 @@ class SwinTransformerSys(nn.Module):
             if 'use_symmetric_decoder' not in kwargs:
                 self.use_symmetric_decoder = getattr(config, 'use_symmetric_decoder', False)
             if 'use_full_decoder' not in kwargs:
-                self.use_full_decoder = getattr(config, 'use_full_decoder', False)
+                self.use_full_decoder = getattr(config, 'use_full_decoder', True)
 
             # Fix: Ensure Decoder is symmetric to Encoder (unless explicitly configured)
             # This matches the behavior of the original BasicLayer path which uses depths[::-1]
